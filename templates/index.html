@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fake Twitter Post Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {},
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 p-6 flex flex-col items-center min-h-screen transition-colors duration-300">
+
+  <div class="w-full max-w-md flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Create Fake Twitter Post</h1>
+    <button id="theme-toggle" aria-label="Toggle Dark Mode"
+            class="bg-gray-300 dark:bg-gray-700 p-2 rounded">
+      Toggle Theme
+    </button>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data" class="bg-white dark:bg-gray-800 p-6 rounded shadow w-full max-w-md mb-8 transition-colors duration-300">
+    <input type="text" name="name" placeholder="Name" class="w-full p-2 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" required />
+    <input type="text" name="handle" placeholder="Handle (@username)" class="w-full p-2 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" required />
+    
+    <label class="block mb-2 text-gray-700 dark:text-gray-300">Profile Picture</label>
+    <input type="file" name="profile_pic" accept="image/*" class="mb-3" />
+
+    <label class="inline-flex items-center mb-3 text-gray-700 dark:text-gray-300">
+      <input type="checkbox" name="verified" class="mr-2" />
+      Verified Account
+    </label>
+
+    <textarea name="content" placeholder="Tweet content" class="w-full p-2 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" rows="4" required></textarea>
+    <input type="text" name="date" placeholder="Date (e.g., Aug 11)" class="w-full p-2 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" required />
+    <input type="number" name="likes" placeholder="Likes" class="w-full p-2 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" value="0" />
+    <input type="number" name="retweets" placeholder="Retweets" class="w-full p-2 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" value="0" />
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate Tweet</button>
+  </form>
+
+  {% if tweet %}
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow w-full max-w-md transition-colors duration-300">
+    <div class="flex items-center mb-3">
+      <img src="{{ tweet.profile_pic }}" alt="Profile picture" class="w-12 h-12 rounded-full mr-3 object-cover" />
+      <div class="flex items-center space-x-1">
+        <p class="font-bold text-gray-900 dark:text-gray-100">{{ tweet.name }}</p>
+        {% if tweet.verified %}
+          <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24" aria-label="Verified Account">
+            <path d="M22.5 12l-2.72 4.5 1.1 5.3-4.76-2.8L12 21l-4.12 3-4.76 2.8 1.1-5.3L1.5 12l2.72-4.5-1.1-5.3 4.76 2.8L12 3l4.12-3 4.76-2.8-1.1 5.3L22.5 12z" />
+          </svg>
+        {% endif %}
+      </div>
+    </div>
+    <p class="mb-3 text-lg text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{{ tweet.content }}</p>
+    <p class="text-gray-400 text-sm mb-3">{{ tweet.date }}</p>
+    <div class="flex space-x-6 text-gray-500 dark:text-gray-400 text-sm">
+      <span>❤️ {{ tweet.likes }}</span>
+      <span>🔁 {{ tweet.retweets }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+</body>
+</html>
